@@ -43,11 +43,12 @@ app.get("/", async (req, res) => {
     try {
       const countryInfo = await getCountryFromIp(ip);
       const country = countryInfo ? countryInfo.country : "Wrong IP";
+      console.log("The country is ", country)
 
       const existingRequest = await Request.findOne({ ipAddress: ip });
       if (!existingRequest && country !=="Wrong IP") {
  
-        const newRequest = new Request({ ipAddress: ip, country: country });
+        const newRequest = await new Request({ ipAddress: ip, country: country });
         await newRequest.save();
         console.log(newRequest);
       } else {
