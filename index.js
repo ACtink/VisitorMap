@@ -41,9 +41,10 @@ app.get("/", async (req, res) => {
     }
 
     try {
+      console.log("This is incoming ip" , ip)
       const countryInfo = await getCountryFromIp(ip);
       const country = countryInfo ? countryInfo.country : "Wrong IP";
-      console.log("The country is ", country)
+      console.log("The country is ", country , ip)
 
       const existingRequest = await Request.findOne({ ipAddress: ip });
       if (!existingRequest && country !=="Wrong IP") {
@@ -52,7 +53,7 @@ app.get("/", async (req, res) => {
         await newRequest.save();
         console.log(newRequest);
       } else {
-        console.log(`IP address ${ip} already exists in the database.`);
+        console.log(`${country}`);
       }
     } catch (err) {
       console.error("Error occurred:", err);
