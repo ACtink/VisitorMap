@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visitors Page</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        #chart {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="button-container">
+            <a href="/" class="button">Home</a>
+        </div>
+        <h1>Visitors from All Around the World</h1>
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        const generatedColors = new Set();
+
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function generateRGBColor() {
+            let color;
+            do {
+                const r = getRandomInt(0, 255);
+                const g = getRandomInt(0, 255);
+                const b = getRandomInt(0, 255);
+                color = `rgb(${r}, ${g}, ${b})`;
+            } while (generatedColors.has(color));
+            generatedColors.add(color);
+            return color;
+        }
+
+        const countryCounts = <%- JSON.stringify(countryCounts) %>;
+        const countries = Object.keys(countryCounts);
+        const counts = Object.values(countryCounts);
+
+        const data = countries.map((country, index) => ({
+            x: [country],
+            y: [counts[index]],
+            type: 'bar',
+            name: country,
+            marker: {
+                color: generateRGBColor()
+            },
+            width: 0.5,
+        }));
+
+        const layout = {
+            barmode: 'group',
+            showlegend: true,
+            title: 'Visitor Counts by Country',
+            xaxis: {
+                title: 'Country',
+            },
+            yaxis: {
+                title: 'Number of Visitors',
+            }
+        };
+
+        const config = {
+            displayModeBar: false 
+        };
+
+        Plotly.newPlot('chart', data, layout, config);
+    </script>
+</body>
+</html>
