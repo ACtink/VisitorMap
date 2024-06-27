@@ -34,6 +34,10 @@ app.get("/", async (req, res) => {
 
  
     let ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
+ 
+   
+  
     
 
     if (ip === "::1" || ip === "::ffff:127.0.0.1") {
@@ -42,6 +46,13 @@ app.get("/", async (req, res) => {
 
     try {
       console.log("This is incoming ip" , ip)
+
+      const parsedIP = ip.split(",")
+
+      ip = parsedIP[0]
+
+
+
       const countryInfo = await getCountryFromIp(ip);
       const country = countryInfo ? countryInfo.country : "Wrong IP";
       console.log("The country is ", country , ip)
